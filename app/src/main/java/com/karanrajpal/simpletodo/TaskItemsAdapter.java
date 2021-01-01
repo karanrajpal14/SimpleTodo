@@ -12,15 +12,21 @@ import java.util.List;
 
 public class TaskItemsAdapter extends RecyclerView.Adapter<TaskItemsAdapter.ViewHolder> {
 
+    public interface OnClickListener {
+        void broadcastClick(int listItemIndex);
+    }
+
     public interface OnLongClickListener {
         void broadcastLongClick(int listItemIndex);
     }
 
     List<String> tasks;
+    OnClickListener onClickListener;
     OnLongClickListener onLongClickListener;
 
-    public TaskItemsAdapter(List<String> tasks, OnLongClickListener onLongClickListener) {
+    public TaskItemsAdapter(List<String> tasks, OnClickListener onClickListener, OnLongClickListener onLongClickListener) {
         this.tasks = tasks;
+        this.onClickListener = onClickListener;
         this.onLongClickListener = onLongClickListener;
     }
 
@@ -53,6 +59,7 @@ public class TaskItemsAdapter extends RecyclerView.Adapter<TaskItemsAdapter.View
 
         public void bind(String task) {
             tvTaskView.setText(task);
+            tvTaskView.setOnClickListener(v -> onClickListener.broadcastClick(getAdapterPosition()));
             tvTaskView.setOnLongClickListener(v -> {
                 onLongClickListener.broadcastLongClick(getAdapterPosition());
                 return true;

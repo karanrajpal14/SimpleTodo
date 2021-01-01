@@ -1,9 +1,11 @@
 package com.karanrajpal.simpletodo;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String KEY_TASK_CONTENT = "task_content";
+    public static final String KEY_TASK_POSITION = "task_position";
+    public static final int EDIT_ACTIVITY_CODE = 20;
 
     List<String> tasks;
 
@@ -39,6 +45,14 @@ public class MainActivity extends AppCompatActivity {
 
         loadTasks();
 
+        TaskItemsAdapter.OnClickListener clickListener = listItemIndex -> {
+            Log.d("MainActivity", "Clicked at position " + listItemIndex);
+            Intent i = new Intent(this, EditActivity.class);
+            i.putExtra(KEY_TASK_CONTENT, tasks.get(listItemIndex));
+            i.putExtra(KEY_TASK_POSITION, listItemIndex);
+            startActivityForResult(i, EDIT_ACTIVITY_CODE);
+        };
+
         TaskItemsAdapter.OnLongClickListener longClickListener = listItemIndex -> {
             tasks.remove(listItemIndex);
             adapter.notifyItemRemoved(listItemIndex);
@@ -46,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             saveTasks();
         };
 
-        adapter = new TaskItemsAdapter(tasks, longClickListener);
+        adapter = new TaskItemsAdapter(tasks, clickListener, longClickListener);
         rvTasksList.setAdapter(adapter);
         rvTasksList.setLayoutManager(new LinearLayoutManager(this));
 
@@ -58,6 +72,21 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Task added successfully", Toast.LENGTH_SHORT).show();
             saveTasks();
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == EDIT_ACTIVITY_CODE) {
+            int position = data.getIntExtra(KEY_TASK_POSITION, -1);
+            tasks.set(position, data.getStringExtra(KEY_TASK_CONTENT));
+            adapter.notifyItemChanged(position);
+            Toast.makeText(getApplicationContext(), "Task updated successfully", Toast.LENGTH_SHORT).show();
+            saveTasks();
+        } else {
+            Log.e("MainActivity", "onActivityResult: Incorrect Activity Code or Result Code");
+        }
     }
 
     private File getDataFile() {
