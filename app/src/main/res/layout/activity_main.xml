@@ -10,9 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/editTextTaskItem"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp" />
+        android:layout_margin="0dp" />
 
     <EditText
         android:id="@+id/editTextTaskItem"
@@ -20,11 +18,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
+        android:layout_marginStart="5dp"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
         android:layout_toStartOf="@+id/btnAdd"
-        android:hint="Add an Item here!" />
+        android:hint="Add an Item here!"
+        android:padding="10dp" />
 
     <Button
         android:id="@+id/btnAdd"
@@ -32,8 +31,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="0dp"
+        android:padding="10dp"
         android:text="Add" />
 </RelativeLayout>
